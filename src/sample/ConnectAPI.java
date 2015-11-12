@@ -9,7 +9,7 @@ import javax.xml.transform.Transformer;
 import java.io.*;
 import java.net.*;
 
-
+//http://api.openweathermap.org/data/2.5/forecast/daily?q=Barcelona&mode=json&units=metric&cnt=7&appid=9d88ea129b65c04b75a6b62783fc73bb
 
 public class ConnectAPI {
 
