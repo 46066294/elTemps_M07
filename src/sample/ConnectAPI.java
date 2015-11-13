@@ -16,25 +16,7 @@ import java.util.GregorianCalendar;
 
 public class ConnectAPI {
 
-    /**
-     * Retorna el JSON del temps
-     * @param urlToRead
-     * @return
-     * @throws Exception
-     */
-    public static String getHTML(String urlToRead) throws Exception {
-        StringBuilder result = new StringBuilder();
-        URL url = new URL(urlToRead);
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setRequestMethod("GET");
-        BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-        String line;
-        while ((line = rd.readLine()) != null) {
-            result.append(line);
-        }
-        rd.close();
-        return result.toString();//retorna un JSON
-    }
+
 
     public static void main(String[] args){
         String JsonTemps = "";
@@ -83,9 +65,26 @@ public class ConnectAPI {
             }
         }*/
 
+    }
 
-
-
+    /**
+     * Retorna el JSON del temps
+     * @param urlToRead
+     * @return
+     * @throws Exception
+     */
+    public static String getHTML(String urlToRead) throws Exception {
+        StringBuilder result = new StringBuilder();
+        URL url = new URL(urlToRead);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("GET");
+        BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+        String line;
+        while ((line = rd.readLine()) != null) {
+            result.append(line);
+        }
+        rd.close();
+        return result.toString();//retorna un JSON
     }
 
     /**
