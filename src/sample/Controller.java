@@ -9,20 +9,18 @@ import java.util.Scanner;
 
 public class Controller {
 
-    public TextField textCiudad;
-    public TextField textDies;
-    public ListView lw;
+    public TextField textFieldCiudad;
+    public TextField textFieldDies;
+    public ListView<String> listViewGeneral = new ListView<String>();
+    public Button bAceptar;
 
-    public Button btAceptar;
-    public AnchorPane mainPane;
+    //ConnectAPI connectApi = new ConnectAPI();
 
-    ObservableList<Object> tiemposOL = FXCollections.observableArrayList(
+    ObservableList<String> tiemposOL = FXCollections.observableArrayList(
             "Julia", "Ian", "Sue", "Matthew", "Hannah", "Stephan", "Denise");
 
-    ListView<Object> list = new ListView<Object>(tiemposOL);
-
-    public void inicialize(){
-        list.setItems(tiemposOL);
+    public void initialize(){
+        listViewGeneral.setItems(tiemposOL);
     }
 
 }

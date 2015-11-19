@@ -15,10 +15,12 @@ import java.util.GregorianCalendar;
 //http://api.openweathermap.org/data/2.5/forecast/daily?q=Barcelona&mode=json&units=metric&cnt=7&appid=9d88ea129b65c04b75a6b62783fc73bb
 
 public class ConnectAPI {
-
-
-
+/*
     public static void main(String[] args){
+        mainTemps();
+    }
+*/
+    public static void mainTemps(){
         String JsonTemps = "";
         //String JsonActors = "";
         String api_key = "9d88ea129b65c04b75a6b62783fc73bb";
@@ -32,7 +34,7 @@ public class ConnectAPI {
         try {
             JsonTemps = getHTML(url);//peticioActors   peticioPeli
 
-            SJS(JsonTemps);
+            escriuTempsCiutat(JsonTemps);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -64,7 +66,6 @@ public class ConnectAPI {
                 System.out.println("La peli "+film+" no existeix");
             }
         }*/
-
     }
 
     /**
@@ -91,16 +92,14 @@ public class ConnectAPI {
      * Escriu el temps d'una ciutat
      * @param cadena
      */
-    public static void SJS (String cadena){//para tiempo
+    public static void escriuTempsCiutat (String cadena){//para tiempo
         Calendar fecha = new GregorianCalendar();
         String dia, mes, annio;
         dia = Integer.toString(fecha.get(Calendar.DATE));
         mes = Integer.toString(fecha.get(Calendar.MONTH));
         annio = Integer.toString(fecha.get(Calendar.YEAR));
 
-        JSONObject obj02 = (JSONObject) JSONValue.parse(cadena);
-
-        JSONObject arra02 = obj02;
+        JSONObject arra02 = (JSONObject) JSONValue.parse(cadena);
 
         String out = arra02.toJSONString();
 
@@ -115,7 +114,8 @@ public class ConnectAPI {
         System.out.println("Ciudad: " + ciudad.get("name"));
         String cod = (String) arra02.get("cod");
         System.out.println("Codigo ciudad: " + cod);
-        System.out.println("Pais: " + ciudad.get("country"));
+        String pais = (String) ciudad.get("country");
+        System.out.println("Pais: " + pais);
         System.out.println("Prevision meteorologica de " + test.size() + " dias\n");
         System.out.println("\t-----TIEMPO-----");
 
