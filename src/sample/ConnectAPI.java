@@ -15,18 +15,35 @@ import java.util.GregorianCalendar;
 //http://api.openweathermap.org/data/2.5/forecast/daily?q=Barcelona&mode=json&units=metric&cnt=7&appid=9d88ea129b65c04b75a6b62783fc73bb
 
 public class ConnectAPI {
+
 /*
-    public static void main(String[] args){
+        public static void main(String[] args){
+            mainTemps();
+        }*/
+
+    private String city = "Barcelona";
+    private String units = "metric";//Modificar
+    private String dies = "7";
+    protected int intDies = Integer.parseInt(dies);
+    private String cod = null;
+    private String pais = null;
+    private String min = null;
+    private String max = null;
+    protected String[] vectorTemperaturas;// = new String[Integer.parseInt(dies)];
+
+    public ConnectAPI(){
+        //city = "Barcelona";
+        //dies = "16";
         mainTemps();
     }
-*/
-    public static void mainTemps(){
+
+    public void mainTemps(){
         String JsonTemps = "";
         //String JsonActors = "";
         String api_key = "9d88ea129b65c04b75a6b62783fc73bb";
-        String city = "Barcelona";//Modificar
-        String units = "metric";//Modificar
-        String dies = "7";
+        //city = "Barcelona";//Modificar
+        //String units = "metric";//Modificar
+        //String dies = "7";
         String url = "http://api.openweathermap.org/data/2.5/forecast/daily?q=" + city + "&mode=json&units=" + units + "&cnt=" + dies + "&appid=9d88ea129b65c04b75a6b62783fc73bb";
 
         System.out.println("TEMPS:");//http://api.openweathermap.org/data/2.5/forecast/daily?q=Cuenca&mode=json&units=metric&cnt=7&appid=9d88ea129b65c04b75a6b62783fc73bb
@@ -74,14 +91,14 @@ public class ConnectAPI {
      * @return
      * @throws Exception
      */
-    public static String getHTML(String urlToRead) throws Exception {
+    public String getHTML(String urlToRead) throws Exception {
         StringBuilder result = new StringBuilder();
         URL url = new URL(urlToRead);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("GET");
         BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
         String line;
-        while ((line = rd.readLine()) != null) {
+        while ((line = rd.readLine()) != null) {//IMPORTANT
             result.append(line);
         }
         rd.close();
@@ -92,12 +109,14 @@ public class ConnectAPI {
      * Escriu el temps d'una ciutat
      * @param cadena
      */
-    public static void escriuTempsCiutat (String cadena){//para tiempo
+    public void escriuTempsCiutat (String cadena){//para tiempo
         Calendar fecha = new GregorianCalendar();
         String dia, mes, annio;
         dia = Integer.toString(fecha.get(Calendar.DATE));
         mes = Integer.toString(fecha.get(Calendar.MONTH));
         annio = Integer.toString(fecha.get(Calendar.YEAR));
+
+        vectorTemperaturas = new String[Integer.parseInt(this.getDies())];
 
         JSONObject arra02 = (JSONObject) JSONValue.parse(cadena);
 
@@ -112,9 +131,9 @@ public class ConnectAPI {
         //json parser
         JSONObject ciudad = (JSONObject) arra02.get("city");
         System.out.println("Ciudad: " + ciudad.get("name"));
-        String cod = (String) arra02.get("cod");
+        cod = (String) arra02.get("cod");
         System.out.println("Codigo ciudad: " + cod);
-        String pais = (String) ciudad.get("country");
+        pais = (String) ciudad.get("country");
         System.out.println("Pais: " + pais);
         System.out.println("Prevision meteorologica de " + test.size() + " dias\n");
         System.out.println("\t-----TIEMPO-----");
@@ -124,11 +143,15 @@ public class ConnectAPI {
             JSONObject weatherJsonObject = (JSONObject) test.get(i);
 
             JSONObject temp = (JSONObject) weatherJsonObject.get("temp");
-            String min = temp.get("min").toString();
-            String max = temp.get("max").toString();
+            min = temp.get("min").toString();
+            max = temp.get("max").toString();
+
             System.out.println("\nTemperatura minima: " + min);
             System.out.println("Temperatura maxima: " + max);
-
+            /////////////////////////////////////////////////////////////////////////////////////////////
+            vectorTemperaturas[i] = "minima: " + min + " graus C " + "maxima: " + max + " graus C";
+            //System.out.println(getVectorTemperaturas().toString());
+            System.out.println(vectorTemperaturas[i]);
         }
 
     }
@@ -148,6 +171,52 @@ public class ConnectAPI {
 
         }
 
+    }
+
+    public void limpiaListView(){
+        vectorTemperaturas = new String[Integer.parseInt(dies)];
+    }
+
+    //getters
+    public String getCity() {
+        return city;
+    }
+
+    public String getUnits() {
+        return units;
+    }
+
+    public String getDies() {
+        return dies;
+    }
+
+    public String getCod() {
+        return cod;
+    }
+
+    public String getPais() {
+        return pais;
+    }
+
+    public String getMin() {
+        return min;
+    }
+
+    public String getMax() {
+        return max;
+    }
+
+    public String[] getVectorTemperaturas() {
+        return vectorTemperaturas;
+    }
+
+    //setters
+    public void setCity(String text) {
+        this.city = text;
+    }
+
+    public void setDies(String dies) {
+        this.dies = dies;
     }
 
 }

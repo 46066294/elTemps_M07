@@ -17,10 +17,9 @@ public class Main extends Application {
         primaryStage.setScene(new Scene(root, 600, 400));
         primaryStage.show();
 
-        Controller controller = (Controller)loader.getController();
+        //Controller controller = (Controller)loader.getController();
 
     }
-
 
 
     public static void main(String[] args) {

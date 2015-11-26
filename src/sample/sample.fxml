@@ -11,9 +11,8 @@
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/null" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
    <children>
       <ListView fx:id="listViewGeneral" layoutX="213.0" layoutY="14.0" prefHeight="373.0" prefWidth="373.0" />
-      <Slider layoutX="185.0" layoutY="14.0" orientation="VERTICAL" prefHeight="373.0" prefWidth="32.0" />
-      <Button fx:id="bAceptar" layoutX="14.0" layoutY="332.0" mnemonicParsing="false" prefHeight="55.0" prefWidth="171.0" text="Aceptar" />
-      <TextField fx:id="textFieldCiudad" layoutX="14.0" layoutY="51.0" promptText="Barcelona" />
+      <Button fx:id="bAceptar" layoutX="14.0" layoutY="332.0" mnemonicParsing="false" onAction="#metodoAceptar" prefHeight="55.0" prefWidth="171.0" text="Aceptar" />
+      <TextField fx:id="textFieldCiudad" layoutX="14.0" layoutY="51.0" promptText="Introduzca ciudad" />
       <Label fx:id="labelCiudad" layoutX="14.0" layoutY="19.0" prefHeight="26.0" prefWidth="104.0" text="Ciudad:" />
       <Label layoutX="14.0" layoutY="110.0" prefHeight="26.0" prefWidth="104.0" text="Dies (max 16):" />
       <TextField fx:id="textFieldDies" layoutX="14.0" layoutY="139.0" promptText="7" />
