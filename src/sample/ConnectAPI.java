@@ -1,5 +1,6 @@
 package sample;
 
+import javafx.scene.control.Alert;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
@@ -8,9 +9,7 @@ import org.json.simple.parser.JSONParser;
 import javax.xml.transform.Transformer;
 import java.io.*;
 import java.net.*;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
+import java.util.*;
 
 //http://api.openweathermap.org/data/2.5/forecast/daily?q=Barcelona&mode=json&units=metric&cnt=7&appid=9d88ea129b65c04b75a6b62783fc73bb
 
@@ -30,14 +29,28 @@ public class ConnectAPI {
     private String min = null;
     private String max = null;
     protected String[] vectorTemperaturas;// = new String[Integer.parseInt(dies)];
+    List<Integer> mediaTemperaturasMinimas;
+    List<Integer> mediaTemperaturasMaximas;
+
+    Date fecha = new Date();
+    int diaHoy = getDayOfTheWeek(fecha);
 
     public ConnectAPI(){
         //city = "Barcelona";
         //dies = "16";
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("El Temps Desktop");
+        alert.setHeaderText("Aquesta aplicació et mostrarà la informació\n" +
+                "del temps a la ciutat que vulguis fins a 16 dies vista");
+        alert.setContentText("Let's go!");
+
+        alert.showAndWait();
+
         mainTemps();
     }
 
     public void mainTemps(){
+
         String JsonTemps = "";
         //String JsonActors = "";
         String api_key = "9d88ea129b65c04b75a6b62783fc73bb";
@@ -110,13 +123,17 @@ public class ConnectAPI {
      * @param cadena
      */
     public void escriuTempsCiutat (String cadena){//para tiempo
+        /*
         Calendar fecha = new GregorianCalendar();
         String dia, mes, annio;
         dia = Integer.toString(fecha.get(Calendar.DATE));
         mes = Integer.toString(fecha.get(Calendar.MONTH));
-        annio = Integer.toString(fecha.get(Calendar.YEAR));
+        annio = Integer.toString(fecha.get(Calendar.YEAR));*/
 
         vectorTemperaturas = new String[Integer.parseInt(this.getDies())];
+
+        mediaTemperaturasMinimas = new ArrayList<Integer>();////////////////////////////////////////////////////////////////////////////////////<----------------------
+        mediaTemperaturasMaximas = new ArrayList<Integer>();
 
         JSONObject arra02 = (JSONObject) JSONValue.parse(cadena);
 
@@ -138,6 +155,7 @@ public class ConnectAPI {
         System.out.println("Prevision meteorologica de " + test.size() + " dias\n");
         System.out.println("\t-----TIEMPO-----");
 
+        //muestra info
         for (int i = 0; i < test.size(); i++) {
             //System.out.println(dia + " ");
             JSONObject weatherJsonObject = (JSONObject) test.get(i);
@@ -148,12 +166,42 @@ public class ConnectAPI {
 
             System.out.println("\nTemperatura minima: " + min);
             System.out.println("Temperatura maxima: " + max);
+
             /////////////////////////////////////////////////////////////////////////////////////////////
-            vectorTemperaturas[i] = "minima: " + min + " graus C " + "maxima: " + max + " graus C";
+            vectorTemperaturas[i] = metodoDia() + "\nminima: " + min + " graus C " + "maxima: " + max + " graus C";
+            diaHoy++;
+            if(diaHoy == 8)diaHoy = 1;
             //System.out.println(getVectorTemperaturas().toString());
             System.out.println(vectorTemperaturas[i]);
         }
 
+    }
+
+    private String metodoDia() {
+
+        if(diaHoy == 1){
+            return "DOMINGO:";
+        }
+        else if(diaHoy == 2){
+            return "LUNES:";
+        }
+        else if(diaHoy == 3){
+            return "MARTES:";
+        }
+        else if(diaHoy == 4){
+            return "MIERCOLES:";
+        }
+        else if(diaHoy == 5){
+            return "JUEVES:";
+        }
+        else if(diaHoy == 6){
+            return "VIERNES:";
+        }
+        else if(diaHoy == 7){
+            return "SABADO:";
+        }
+
+        return null;
     }
 
     /**
@@ -175,6 +223,12 @@ public class ConnectAPI {
 
     public void limpiaListView(){
         vectorTemperaturas = new String[Integer.parseInt(dies)];
+    }
+
+    public static int getDayOfTheWeek(Date d){
+        GregorianCalendar cal = new GregorianCalendar();
+        cal.setTime(d);
+        return cal.get(Calendar.DAY_OF_WEEK);
     }
 
     //getters
