@@ -7,6 +7,11 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+/**
+ * Aplicació que informa del temps
+ * d'una ciutat (introduida per l'usuari) per a
+ * tants dies com introdueixi l'usuari.
+ */
 public class Main extends Application {
 
     @Override

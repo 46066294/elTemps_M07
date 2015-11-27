@@ -5,20 +5,23 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.json.simple.parser.JSONParser;
-
 import javax.xml.transform.Transformer;
 import java.io.*;
 import java.net.*;
 import java.util.*;
 
+import static java.lang.Math.round;
+
 //http://api.openweathermap.org/data/2.5/forecast/daily?q=Barcelona&mode=json&units=metric&cnt=7&appid=9d88ea129b65c04b75a6b62783fc73bb
 
+/**MODEL
+ * Connexió a la API openweathermap
+ * amb les seguents dades:
+ *  -ciutat
+ *  -dies
+ *  -(la resta d'atributs nomes les utilitza el programa)
+ */
 public class ConnectAPI {
-
-/*
-        public static void main(String[] args){
-            mainTemps();
-        }*/
 
     private String city = "Barcelona";
     private String units = "metric";//Modificar
@@ -29,8 +32,10 @@ public class ConnectAPI {
     private String min = null;
     private String max = null;
     protected String[] vectorTemperaturas;// = new String[Integer.parseInt(dies)];
-    List<Integer> mediaTemperaturasMinimas;
-    List<Integer> mediaTemperaturasMaximas;
+    List<Double> mediaTemperaturasMinimas;
+    List<Double> mediaTemperaturasMaximas;
+    private double mediaTempMinima;
+    private double mediaTempMaxima;
 
     Date fecha = new Date();
     int diaHoy = getDayOfTheWeek(fecha);
@@ -49,6 +54,10 @@ public class ConnectAPI {
         mainTemps();
     }
 
+    /**
+     * Procediment principal per a conectar-se
+     * a la API
+     */
     public void mainTemps(){
 
         String JsonTemps = "";
@@ -71,31 +80,6 @@ public class ConnectAPI {
             System.out.println("...error de conexion a API");
         }
 
-        //SJS(url);
-
-        /*
-        for (int i = 0; i < 10; i++) {//http://openweathermap.org/city/3128760
-            int peliId = 620 + i;
-            String film = String.valueOf(peliId);
-            String peticioTempsBCN = "http://openweathermap.org/city/3128760";
-            //String peticioActors = "https://api.themoviedb.org/3/movie/"+film+"/credits?api_key="+api_key;
-            //String peticioPeli = "https://api.themoviedb.org/3/movie/"+film+"?api_key="+api_key;
-
-            try {
-                JsonPelis = getHTML(peticioPeli);//peticioActors   peticioPeli
-                //System.out.println("PELICULAS:");
-                //System.out.println(JsonPelis);
-                SJS(JsonPelis);
-
-                JsonActors = getHTML(peticioActors);
-                System.out.println("\tActors:");
-                //System.out.println("\t" + JsonActors);
-                SJCpersonaje(JsonActors);
-
-            } catch (Exception e) {
-                System.out.println("La peli "+film+" no existeix");
-            }
-        }*/
     }
 
     /**
@@ -119,21 +103,15 @@ public class ConnectAPI {
     }
 
     /**
-     * Escriu el temps d'una ciutat
+     * Escriu el temps d'una ciutat a partir d'un JSON
      * @param cadena
      */
     public void escriuTempsCiutat (String cadena){//para tiempo
-        /*
-        Calendar fecha = new GregorianCalendar();
-        String dia, mes, annio;
-        dia = Integer.toString(fecha.get(Calendar.DATE));
-        mes = Integer.toString(fecha.get(Calendar.MONTH));
-        annio = Integer.toString(fecha.get(Calendar.YEAR));*/
 
         vectorTemperaturas = new String[Integer.parseInt(this.getDies())];
 
-        mediaTemperaturasMinimas = new ArrayList<Integer>();////////////////////////////////////////////////////////////////////////////////////<----------------------
-        mediaTemperaturasMaximas = new ArrayList<Integer>();
+        mediaTemperaturasMinimas = new ArrayList<Double>();
+        mediaTemperaturasMaximas = new ArrayList<Double>();
 
         JSONObject arra02 = (JSONObject) JSONValue.parse(cadena);
 
@@ -157,7 +135,6 @@ public class ConnectAPI {
 
         //muestra info
         for (int i = 0; i < test.size(); i++) {
-            //System.out.println(dia + " ");
             JSONObject weatherJsonObject = (JSONObject) test.get(i);
 
             JSONObject temp = (JSONObject) weatherJsonObject.get("temp");
@@ -166,17 +143,32 @@ public class ConnectAPI {
 
             System.out.println("\nTemperatura minima: " + min);
             System.out.println("Temperatura maxima: " + max);
-
-            /////////////////////////////////////////////////////////////////////////////////////////////
-            vectorTemperaturas[i] = metodoDia() + "\nminima: " + min + " graus C " + "maxima: " + max + " graus C";
+            mediaTemperaturasMinimas.add(Double.valueOf(min));
+            mediaTemperaturasMaximas.add(Double.valueOf(max));
+            vectorTemperaturas[i] = metodoDia() + "\nminima: " + min + " grados C " + "maxima: " + max + " graus C";
             diaHoy++;
+
             if(diaHoy == 8)diaHoy = 1;
-            //System.out.println(getVectorTemperaturas().toString());
+
             System.out.println(vectorTemperaturas[i]);
         }
 
+        double tempMinima = 0;
+        double tempMaxima = 0;
+        for(int i = 0; i < mediaTemperaturasMinimas.size(); i++){
+            tempMinima = tempMinima + mediaTemperaturasMinimas.get(i);
+            tempMaxima = tempMaxima + mediaTemperaturasMaximas.get(i);
+        }
+        mediaTempMinima = tempMinima / mediaTemperaturasMinimas.size();
+        mediaTempMaxima = tempMinima / mediaTemperaturasMaximas.size();
+
+        diaHoy = getDayOfTheWeek(fecha);
     }
 
+    /**
+     * Funcio per a saber el nom del dia
+     * @return String amb el nom del dia
+     */
     private String metodoDia() {
 
         if(diaHoy == 1){
@@ -205,26 +197,23 @@ public class ConnectAPI {
     }
 
     /**
-     * Escriu tots els personatges
-     * @param cadena
+     * Neteja el ListView que mostra la informació
+     * per a rebre noves dades
      */
-    public static void SJCpersonaje (String cadena){//para personajes
-        Object obj02 =JSONValue.parse(cadena);
-        JSONObject arra02=(JSONObject)obj02;
-        JSONArray arra03 = (JSONArray)arra02.get("cast");
-
-        for (int i = 0; i < arra03.size(); i++) {
-            JSONObject jb= (JSONObject)arra03.get(i);
-            System.out.println("\t" + (i+1) + " - " + jb.get("character")+"<-->"+jb.get("name"));
-
-        }
-
-    }
-
     public void limpiaListView(){
-        vectorTemperaturas = new String[Integer.parseInt(dies)];
+        //vectorTemperaturas = new String[Integer.parseInt(dies)];
+        vectorTemperaturas = null;
     }
 
+    /**
+     * Funció que retorna un enter per a saber el
+     * dia en el que estem:
+     * 1=diumenge
+     * 2=dilluns
+     * ...
+     * @param d Date
+     * @return enter que simbolitza el dia de la setmana
+     */
     public static int getDayOfTheWeek(Date d){
         GregorianCalendar cal = new GregorianCalendar();
         cal.setTime(d);
@@ -232,6 +221,16 @@ public class ConnectAPI {
     }
 
     //getters
+    public String getMediaTempMinima() {
+        String minima = String.valueOf(round(mediaTempMinima));
+        return minima;
+    }
+
+    public String getMediaTempMaxima() {
+        String maxima = String.valueOf(round(mediaTempMaxima));
+        return maxima;
+    }
+
     public String getCity() {
         return city;
     }
@@ -276,8 +275,8 @@ public class ConnectAPI {
 }
 /*
 
+EXEMPLE DE JSON
 
-#4
 November 13th 2015, 4:37:45 pm
 Valid JSON (RFC 4627)
 Formatted JSON Data
